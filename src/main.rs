@@ -145,21 +145,28 @@ impl App for Switchit {
                                     if button.secondary_clicked() {
                                         self.projects.remove(y);
                                     } else if button.clicked() {
-                                        if cfg!(target_os = "windows") {
-                                            std::process::Command::new(CODE)
-                                                .arg(&project.path)
-                                                .arg("-r")
-                                                .output()
-                                                .unwrap();
-                                        } else {
-                                            use std::os::windows::process::CommandExt;
-                                            std::process::Command::new(CODE)
-                                                .arg(&project.path)
-                                                .arg("-r")
-                                                .creation_flags(0x08000000)
-                                                .spawn()
-                                                .unwrap();
-                                        }
+                                        #[cfg(target_os = "windows")]
+                                        use std::os::windows::process::CommandExt;
+                                        #[cfg(target_os = "windows")]
+                                        std::process::Command::new(CODE)
+                                            .arg(&project.path)
+                                            .arg("-r")
+                                            .creation_flags(0x08000000)
+                                            .spawn()
+                                            .unwrap();
+                                        #[cfg(target_os = "macos")]
+                                        std::process::Command::new(CODE)
+                                            .arg(&project.path)
+                                            .arg("-r")
+                                            .spawn()
+                                            .unwrap();
+                                        #[cfg(target_os = "linux")]
+                                        std::process::Command::new(CODE)
+                                            .arg(&project.path)
+                                            .arg("-r")
+                                            .arg("&")
+                                            .spawn()
+                                            .unwrap();
                                     };
                                 });
                             }
