@@ -145,13 +145,21 @@ impl App for Switchit {
                                     if button.secondary_clicked() {
                                         self.projects.remove(y);
                                     } else if button.clicked() {
-                                        use std::os::windows::process::CommandExt;
-                                        std::process::Command::new(CODE)
-                                            .arg(&project.path)
-                                            .arg("-r")
-                                            .creation_flags(0x08000000)
-                                            .spawn()
-                                            .unwrap();
+                                        if cfg!(target_os = "windows") {
+                                            std::process::Command::new(CODE)
+                                                .arg(&project.path)
+                                                .arg("-r")
+                                                .output()
+                                                .unwrap();
+                                        } else {
+                                            use std::os::windows::process::CommandExt;
+                                            std::process::Command::new(CODE)
+                                                .arg(&project.path)
+                                                .arg("-r")
+                                                .creation_flags(0x08000000)
+                                                .spawn()
+                                                .unwrap();
+                                        }
                                     };
                                 });
                             }
