@@ -225,11 +225,11 @@ impl Switchit {
         let mut fonts = FontDefinitions::default();
         fonts.font_data.insert(
             "Fantasque Sans Mono Bold".to_owned(),
-            FontData::from_static(include_bytes!("fonts\\FantasqueSansMono-Bold.ttf")),
+            FontData::from_static(include_bytes!("fonts/FantasqueSansMono-Bold.ttf")),
         );
         fonts.font_data.insert(
             "Fantasque Sans Mono".to_owned(),
-            FontData::from_static(include_bytes!("fonts\\FantasqueSansMono-Regular.ttf")),
+            FontData::from_static(include_bytes!("fonts/FantasqueSansMono-Regular.ttf")),
         );
         fonts
             .families
