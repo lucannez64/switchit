@@ -199,7 +199,9 @@ impl App for Switchit {
                     let button = ui.button("+");
                     if button.clicked() && !self.path.is_empty() && !self.name.is_empty() {
                         if self.checked && !self.language.is_empty() {
+                            #[cfg(target_os = "windows")]
                             use std::os::windows::process::CommandExt;
+                            #[cfg(target_os = "windows")]
                             std::process::Command::new("project")
                                 .arg("-l")
                                 .arg(&self.language.to_owned())
@@ -208,6 +210,26 @@ impl App for Switchit {
                                 .arg("-p")
                                 .arg(&self.path.to_owned())
                                 .creation_flags(0x08000000)
+                                .spawn()
+                                .unwrap();
+                            #[cfg(target_os = "macos")]
+                            std::process::Command::new("project")
+                                .arg("-l")
+                                .arg(&self.language.to_owned())
+                                .arg("-n")
+                                .arg(&self.name.to_owned())
+                                .arg("-p")
+                                .arg(&self.path.to_owned())
+                                .spawn()
+                                .unwrap();
+                            #[cfg(target_os = "linux")]
+                            std::process::Command::new("project")
+                                .arg("-l")
+                                .arg(&self.language.to_owned())
+                                .arg("-n")
+                                .arg(&self.name.to_owned())
+                                .arg("-p")
+                                .arg(&self.path.to_owned())
                                 .spawn()
                                 .unwrap();
                             self.projects.push(Project {
