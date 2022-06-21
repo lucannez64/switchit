@@ -158,15 +158,17 @@ impl App for Switchit {
                                         std::process::Command::new(CODE)
                                             .arg(&project.path)
                                             .arg("-r")
-                                            .spawn()
-                                            .unwrap();
-                                        #[cfg(target_os = "linux")]
-                                        std::process::Command::new(CODE)
-                                            .arg(&project.path)
-                                            .arg("-r")
                                             .arg("&")
                                             .spawn()
                                             .unwrap();
+                                        #[cfg(target_os = "linux")]
+                                        if let Ok(fork::Fork::Child) = daemon(false,false) {
+                                            std::process::Command::new(CODE)
+                                                .arg(&project.path)
+                                                .arg("-r")
+                                                .spawn()
+                                                .unwrap();
+                                        }
                                     };
                                 });
                             }
@@ -220,10 +222,12 @@ impl App for Switchit {
                                 .arg(&self.name.to_owned())
                                 .arg("-p")
                                 .arg(&self.path.to_owned())
+                                .arg("&")
                                 .spawn()
                                 .unwrap();
                             #[cfg(target_os = "linux")]
-                            std::process::Command::new("project")
+                            if let Ok(fork::Fork::Child) = daemon(false,false) {
+                                std::process::Command::new("project")
                                 .arg("-l")
                                 .arg(&self.language.to_owned())
                                 .arg("-n")
@@ -232,6 +236,7 @@ impl App for Switchit {
                                 .arg(&self.path.to_owned())
                                 .spawn()
                                 .unwrap();
+                            }
                             self.projects.push(Project {
                                 name: self.name.to_owned(),
                                 path: self.path.to_owned() + &self.name.to_owned(),
