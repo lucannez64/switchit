@@ -240,14 +240,14 @@ impl App for Switchit {
                             self.name = String::new();
                             self.path = String::new();
                             self.language = String::new();
+                        } else {
+                            self.projects.push(Project {
+                                name: self.name.to_owned(),
+                                path: self.path.to_owned(),
+                            });
+                            self.name = String::new();
+                            self.path = String::new();
                         }
-                    } else {
-                        self.projects.push(Project {
-                            name: self.name.to_owned(),
-                            path: self.path.to_owned(),
-                        });
-                        self.name = String::new();
-                        self.path = String::new();
                     }
                 });
             });
