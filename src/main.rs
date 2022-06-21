@@ -8,6 +8,7 @@ use eframe::{
     run_native, App, Frame, IconData, NativeOptions,
 };
 
+// Get the code for every platform
 #[cfg(target_os = "windows")]
 static CODE: &str = "code.cmd";
 #[cfg(target_os = "linux")]
@@ -46,6 +47,8 @@ struct Project {
     path: String,
 }
 
+//Load the icon file
+// TODO: This should be compiled into the executable
 fn load_icon(path: &str) -> IconData {
     let (icon_rgba, icon_width, icon_height) = {
         let image = image::open(path)
@@ -63,6 +66,7 @@ fn load_icon(path: &str) -> IconData {
     }
 }
 
+// parse every line of the file and convert it into Option<Project>
 fn parse_line(line: &str) -> Option<Project> {
     let mut iter = line.split("{}");
     let key = iter.next().unwrap().to_string();
